@@ -22,7 +22,6 @@ class ReinstatementRequest extends Model
         'reviewed_at' => 'datetime',
     ];
 
-    // العلاقات
     public function booking()
     {
         return $this->belongsTo(Booking::class);
