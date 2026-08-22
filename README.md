@@ -1,92 +1,78 @@
 # 🏨 Hotel Booking System
 
-نظام حجز فنادق مبني باستخدام **Laravel**، يهدف إلى تسهيل عملية حجز الغرف وإدارة الفنادق.
+A hotel room booking system built with **Laravel** to simplify room reservations and hotel management.
 
 ---
 
-## 🚀 المتطلبات الأساسية
+## 🚀 Requirements
 
-قبل تشغيل المشروع، تأكد من تثبيت ما يلي:
+Before running the project, make sure you have the following installed:
 
 - PHP >= 8.2
 - Composer
 - MySQL
-- XAMPP
+- XAMPP or any local server environment
+
 ---
 
-## ⚙️ خطوات التثبيت والتشغيل
+## ⚙️ Installation & Setup
 
-1. **استنساخ المشروع**
+### 1. Clone the repository
 ```bash
 git clone https://github.com/ramaAlwanni/Hotel_booking.git
-cd Hotel_booking
 ```
-
-2. **تثبيت الحزم**
+### 2. Install dependencies
 ```bash
 composer install
 ```
-
-3. **إعداد ملف البيئة**
+### 3. Environment configuration
 ```bash
 cp .env.example .env
 ```
-
-4. **توليد مفتاح التطبيق**
+### 4. Generate application key
 ```bash
 php artisan key:generate
 ```
-
-5. **تعديل إعدادات قاعدة البيانات** في ملف `.env`
-```env
+### 5. Configure database settings in .env
+env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=hotel_booking
 DB_USERNAME=root
 DB_PASSWORD=
-```
-
-6. **تشغيل الهجرات (المigrations)**
+### 6. Run database migrations
 ```bash
 php artisan migrate
 ```
-
-7. **تشغيل الخادم المحلي**
+### 7. Start the development server
 ```bash
 php artisan serve
 ```
+### 8. Open your browser and visit:
+http://127.0.0.1:8000
 
-8. **فتح المتصفح على الرابط:**  
-   [http://127.0.0.1:8000](http://127.0.0.1:8000)
+### 📁 Project Structure
+app/Models/ – Eloquent models (User, Hotel, Booking, ...)
+app/Http/Controllers/ – Application controllers
+routes/web.php – Web routes
+database/migrations/ – Database schema migrations
+resources/views/ – Blade view templates
 
----
+### 🛠️ Tech Stack
+Laravel 12 – PHP Framework
+MySQL – Relational Database
+Spatie/laravel-permission – Role & Permission Management
 
-## 🗂️ هيكل المشروع
+### 🧪 Upcoming Features
+User authentication & role-based access control
+Hotel & room management (CRUD)
+Booking system with payment integration (Stripe)
+Admin dashboard built with React
+Email notifications & queue system
+Docker & CI/CD support
 
-- `app/Models/` - نماذج البيانات (مثل `User`, `Hotel`, `Booking`)
-- `app/Http/Controllers/` - المتحكمات
-- `routes/web.php` - مسارات الويب
-- `database/migrations/` - هجرات قاعدة البيانات
-- `resources/views/` - ملفات الواجهة (Blade)
+### 👤 Author
+Rama Alwanni
+GitHub: [@ramaAlwanni](https://github.com/rama)
 
----
-
-## 🛠️ الأدوات المستخدمة
-
-- **Laravel 12** - إطار العمل
-- **MySQL** - قاعدة البيانات
-- **Spatie/laravel-permission** - إدارة الصلاحيات
-
----
-
-## 👤 المطور
-
-**Rama Alwanni**  
-GitHub: [ramaAlwanni](https://github.com/ramaAlwanni)
-
----
-
-## 📄 الترخيص
-
-هذا المشروع مفتوح المصدر بموجب ترخيص [MIT](https://opensource.org/licenses/MIT).
