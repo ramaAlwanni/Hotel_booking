@@ -2,6 +2,7 @@
 
 namespace App\Services\Api;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -35,14 +36,20 @@ class AuthService
 
         $user = User::where('email', $data['email'])->first();
 
+        if ($user->email_verified_at == null) {
+            return 'email_not_verified';
+        }
+
         $user->tokens()->delete();
         $accessTokenExpiresAt = Carbon::now()->addDays(1);
         $accessToken = $user->createToken('access_token', ['patient'], $accessTokenExpiresAt)->plainTextToken;
         return [
-            'user' => $user,
+            'user' => new UserResource($user),
             'access_token' =>  $accessToken,
             'access_token_expires_at' => '1 day',
             'token_type' => 'Bearer',
         ];
     }
+    //************************************ */
+
 }
