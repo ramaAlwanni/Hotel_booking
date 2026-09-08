@@ -5,24 +5,22 @@ namespace App\Services\Api;
 use App\Exceptions\General\EmailAlreadyVerifiedException;
 use App\Exceptions\OTP\InvalidOTPException;
 use App\Exceptions\OTP\OTPExpiredException;
-use App\Exceptions\OTP\OtpUsedException;
 use App\Models\User;
 use App\Notifications\OTPNotification;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 class OTPService
 {
     public function sendOTP(object $user)
     {
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $expiresAt = Carbon::now()->addMinutes(5);
 
+        Cache::put( "otp:user:{$user->id}",
+                    Hash::make($otp),
+                    now()->addMinutes(5)
+        );
         $user->notify((new OTPNotification($otp))->onQueue('default'));
-
-        $user->update([
-            'otp' => $otp,
-            'expires_at' => $expiresAt,
-        ]);
     }
     //************************************************* */
     public function verifyOtp(array $request)
@@ -33,22 +31,20 @@ class OTPService
             throw new EmailAlreadyVerifiedException;
         }
 
-        if ($user->otp != $request['otp']) {
-            throw new InvalidOTPException;
-        }
+        $hashedOtp = Cache::get("otp:user:{$user->id}");
 
-        if ($user->expires_at->isPast()) {
+        if (!$hashedOtp) {
             throw new OTPExpiredException;
         }
 
-        if ($user->otp == null) {
-            throw new OtpUsedException;
+        if (!Hash::check($request['otp'], $hashedOtp)) {
+            throw new InvalidOTPException;
         }
 
+        Cache::forget("otp:user:{$user->id}");
+
         $user->update([
-            'otp' => null,
-            'expires_at' => null,
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ]);
        
         return $user;
@@ -63,12 +59,12 @@ class OTPService
         }
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $expiresAt = Carbon::now()->addMinutes(5);
 
-        $user->update([
-            'otp' => $otp,
-            'expires_at' => $expiresAt,
-        ]);
+        Cache::put(
+            "otp:user:{$user->id}",
+            Hash::make($otp),
+            now()->addMinutes(5)
+        );
         $user->notify(new OTPNotification($otp));
     }
 }

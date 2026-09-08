@@ -41,7 +41,6 @@ return Application::configure(basePath: dirname(__DIR__))
             EmailNotVerifiedException::class,
             OTPExpiredException::class,
             InvalidOTPException::class,
-            OtpUsedException::class,
         ]);
 
         //* This level is used to log the exception in the log file, you can change it to any level you want */
