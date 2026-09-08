@@ -2,11 +2,13 @@
 
 namespace App\Services\Api;
 
+use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Exceptions\General\EmailNotVerifiedException;
 
 class AuthService 
 {
@@ -31,13 +33,13 @@ class AuthService
         ];
 
         if (!Auth::attempt($credentials)) {
-            return 'unauthorized';
+            throw new InvalidCredentialsException;
         }
 
         $user = User::where('email', $data['email'])->first();
 
         if ($user->email_verified_at == null) {
-            return 'email_not_verified';
+            throw new EmailNotVerifiedException;
         }
 
         $user->tokens()->delete();

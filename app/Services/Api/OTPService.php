@@ -2,6 +2,10 @@
 
 namespace App\Services\Api;
 
+use App\Exceptions\General\EmailAlreadyVerifiedException;
+use App\Exceptions\OTP\InvalidOTPException;
+use App\Exceptions\OTP\OTPExpiredException;
+use App\Exceptions\OTP\OtpUsedException;
 use App\Models\User;
 use App\Notifications\OTPNotification;
 use Carbon\Carbon;
@@ -23,22 +27,22 @@ class OTPService
     //************************************************* */
     public function verifyOtp(array $request)
     {
-        $user = User::where('email', $request['email'])->first();
+        $user = User::where('email', $request['email'])->firstOrFail();
 
         if ($user->email_verified_at) {
-            return 'EmailVerified';
-        }
-
-        if (!$user) {
-            return 'UserNotFound!';
+            throw new EmailAlreadyVerifiedException;
         }
 
         if ($user->otp != $request['otp']) {
-            return 'NotValidOTP';
+            throw new InvalidOTPException;
         }
 
         if ($user->expires_at->isPast()) {
-            return 'OTPHasExpired';
+            throw new OTPExpiredException;
+        }
+
+        if ($user->otp == null) {
+            throw new OtpUsedException;
         }
 
         $user->update([
@@ -46,19 +50,16 @@ class OTPService
             'expires_at' => null,
             'email_verified_at' => now()
         ]);
-
-        if ($user->otp == null) {
-            'OTP used';
-        }
-
-        return 'CorrectOTP';
+       
+        return $user;
     }
     //************************************************* */
     public function resendOtp(array $request)
     {
-        $user = User::where('email', $request['email'])->first();
-        if (!$user) {
-            return 'UserNotFound';
+        $user = User::where('email', $request['email'])->firstOrFail();
+
+        if ($user->email_verified_at) {
+            throw new EmailAlreadyVerifiedException;
         }
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -68,9 +69,6 @@ class OTPService
             'otp' => $otp,
             'expires_at' => $expiresAt,
         ]);
-
         $user->notify(new OTPNotification($otp));
-
-        return 'OTPResentSuccessfully';
     }
 }
