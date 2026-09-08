@@ -14,8 +14,6 @@ class AuthService
 {
     public function register(array $data)
     {
-        User::where('email', $data['email'])->first();
-
         $user = User::create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
