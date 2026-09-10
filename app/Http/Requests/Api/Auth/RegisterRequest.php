@@ -31,7 +31,7 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    public function failedValidation(Validator $validator)
     {
         throw new ValidationException($validator);
     }

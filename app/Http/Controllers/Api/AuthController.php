@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Services\Api\AuthService;
 use App\Services\Api\OTPService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Auth\AuthenticationException;
 
 class AuthController extends Controller
 {
@@ -39,7 +40,11 @@ class AuthController extends Controller
     // -------------------------------------------------------------------------------------------
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+        $user = auth()->user();
+        if(!$user){
+            throw new AuthenticationException();
+        }
+        $user->tokens()->delete();
         return $this->success('User logout successfully', null, 200);
     }
     //*************************************** */
