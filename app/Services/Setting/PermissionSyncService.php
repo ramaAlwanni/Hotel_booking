@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api;
+namespace App\Services\Setting;
 
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -14,14 +14,15 @@ class PermissionSyncService
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $permissions = Config::get('permissions.permissions', []);
+        $roles = Config::get('permissions.roles', []);
 
-        foreach (Config::get('permissions.permissions', []) as $permission) {
+        foreach ($permissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
             ]);
         }
 
-        foreach (Config::get('permissions.roles', []) as $roleName => $permissions) {
+        foreach ($roles as $roleName => $permissions) {
             $role = Role::firstOrCreate([
                 'name' => $roleName,
             ]);
