@@ -1,23 +1,18 @@
 <?php
 
 return [
-    'permission' => [
-        
+    'permissions' => [
+       
     ],
 
-    'role' => [
-        'admin' => ['*'],
+    'roles' => [
+        'super-admin' => ['*'],
 
-        'hotel_manager' => [
-           
-        ],
+        'admin' => [''],
 
-        'user' => [
-            
-        ],
+        'hotel_manager' => [''],
 
-        'guest' => [
-           
-        ],
+        'customer' => [''],
+
     ],
 ];

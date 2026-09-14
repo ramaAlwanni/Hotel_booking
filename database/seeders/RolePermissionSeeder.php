@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Services\Api\PermissionSyncService;
+use App\Services\Setting\PermissionSyncService;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
