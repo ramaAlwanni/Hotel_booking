@@ -34,8 +34,6 @@ class User extends Authenticatable
     }
 
 
-
-    // العلاقات
     public function hotels()
     {
         return $this->hasMany(Hotel::class);
