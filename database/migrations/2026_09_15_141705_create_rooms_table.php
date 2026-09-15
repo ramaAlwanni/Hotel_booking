@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->constrained('hotels')->onDelete('cascade');
+            $table->foreignId('room_type_id')->constrained('room_types')->onDelete('cascade');
             $table->string('room_number');
-            $table->enum('type', ['single', 'double', 'suite']);
-            $table->decimal('price_per_night', 10, 2);
-            $table->integer('max_occupancy');
-            $table->boolean('is_active')->default(true);
+            $table->enum('status', ['available', 'maintenance'])->default('available'); // حالة الغرفة الفيزيائية
             $table->timestamps();
         });
     }

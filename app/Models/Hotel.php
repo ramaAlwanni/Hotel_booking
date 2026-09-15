@@ -25,8 +25,7 @@ class Hotel extends Model
         'is_active' => 'boolean',
     ];
 
-    // العلاقات
-    public function manager()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -34,6 +33,11 @@ class Hotel extends Model
     public function rooms()
     {
         return $this->hasMany(Room::class);
+    }
+
+    public function roomTypes()
+    {
+        return $this->hasMany(RoomTypes::class);
     }
 
     public function bookings()

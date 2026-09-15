@@ -36,36 +36,4 @@ class ReinstatementRequest extends Model
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
-
-    // التحقق من أن الطلب ما زال pending
-    public function isPending()
-    {
-        return $this->status === 'pending';
-    }
-
-    // الموافقة على الطلب
-    public function approve($reviewerId)
-    {
-        $this->update([
-            'status' => 'approved',
-            'reviewed_by' => $reviewerId,
-            'reviewed_at' => now(),
-        ]);
-
-        // نعيد الحجز إلى pending مع وقت جديد
-        $this->booking->update([
-            'status' => 'pending',
-            'expires_at' => now()->addMinutes(5),
-        ]);
-    }
-
-    // رفض الطلب
-    public function reject($reviewerId)
-    {
-        $this->update([
-            'status' => 'rejected',
-            'reviewed_by' => $reviewerId,
-            'reviewed_at' => now(),
-        ]);
-    }
 }
